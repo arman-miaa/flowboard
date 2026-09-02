@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import api from '@/lib/api';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { boardService } from '@/services/board/board.service';
+import { logoutUser } from '@/services/auth/logoutUser';
 import { Plus, LayoutDashboard, Users, LogOut } from 'lucide-react';
 
 export default function Dashboard() {
@@ -23,10 +23,9 @@ export default function Dashboard() {
     fetchBoards();
   }, []);
 
-  const fetchBoards = async () => {
     try {
-      const res = await api.get('/boards');
-      setBoards(res.data.data || []);
+      const res = await boardService.getBoards();
+      setBoards(res.data || []);
     } catch (error) {
       console.error('Failed to fetch boards', error);
     } finally {
@@ -38,16 +37,15 @@ export default function Dashboard() {
     const name = prompt('Enter board name:');
     if (!name) return;
     try {
-      const res = await api.post('/boards', { name, description: '' });
-      router.push(`/b/${res.data.data.id}`);
+      const res = await boardService.createBoard({ name, description: '' });
+      router.push(`/b/${res.data.id}`);
     } catch (error) {
       alert('Failed to create board');
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('flowboard_token');
-    localStorage.removeItem('flowboard_user');
+    logoutUser();
     router.push('/login');
   };
 
@@ -110,12 +108,12 @@ export default function Dashboard() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {myBoards.map(board => (
-                <Link key={board.id} href={`/b/${board.id}`}>
+                <a key={board.id} href={`/b/${board.id}`}>
                   <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer h-32 flex flex-col justify-between group">
                     <h3 className="font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors">{board.name}</h3>
                     <div className="text-xs text-[#64748B]">Created {new Date(board.createdAt).toLocaleDateString()}</div>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           )}
@@ -130,12 +128,12 @@ export default function Dashboard() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {sharedBoards.map(board => (
-                <Link key={board.id} href={`/b/${board.id}`}>
+                <a key={board.id} href={`/b/${board.id}`}>
                   <div className="bg-white border border-[#E2E8F0] rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer h-32 flex flex-col justify-between group">
                     <h3 className="font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors">{board.name}</h3>
                     <div className="text-xs text-[#64748B]">Owned by {board.ownerId}</div>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
           )}

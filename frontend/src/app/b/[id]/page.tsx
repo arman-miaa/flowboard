@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import api from '@/lib/api';
+import { boardService } from '@/services/board/board.service';
 import { useParams, useRouter } from 'next/navigation';
 import { Share, Plus, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
@@ -17,8 +17,8 @@ export default function BoardView() {
 
   const fetchBoard = async () => {
     try {
-      const res = await api.get(`/boards/${params.id}`);
-      setBoard(res.data.data || null);
+      const res = await boardService.getBoardById(params.id as string);
+      setBoard(res.data || null);
     } catch (error) {
       console.error('Failed to fetch board', error);
       // alert('Access denied or board not found');
@@ -32,7 +32,7 @@ export default function BoardView() {
     const title = prompt('Enter column title:');
     if (!title) return;
     try {
-      await api.post(`/boards/${params.id}/columns`, {
+      await boardService.createColumn(params.id as string, {
         title,
         position: board.columns?.length || 0,
       });
@@ -46,7 +46,7 @@ export default function BoardView() {
     const title = prompt('Enter task title:');
     if (!title) return;
     try {
-      await api.post(`/columns/${columnId}/tasks`, {
+      await boardService.createTask(columnId, {
         title,
         position: currentTasksLength,
       });

@@ -1,25 +1,31 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import api from '@/lib/api';
+import { loginUser, loginSchema, LoginData } from '@/services/auth/loginUser';
+import { setCookie } from '@/services/auth/tokenHandlers';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
+  
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginData>({
+    resolver: zodResolver(loginSchema)
+  });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginData) => {
     try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('flowboard_token', res.data.data.accessToken);
-      localStorage.setItem('flowboard_user', JSON.stringify(res.data.data.user));
+      const res = await loginUser(data);
+      // set access token in cookies for server-fetch compatibility
+      await setCookie('accessToken', res.data.accessToken);
+      // save user in localStorage (as before)
+      localStorage.setItem('flowboard_user', JSON.stringify(res.data.user));
+      localStorage.setItem('flowboard_token', res.data.accessToken);
       toast.success('Login successful! Welcome back.');
       router.push('/dashboard');
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      toast.error(err.message || 'Login failed');
     }
   };
 
@@ -31,32 +37,31 @@ export default function Login() {
           <p className="text-[#64748B] mt-2">Log in to manage your tasks</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-[#0F172A] mb-1">Email</label>
             <input 
               type="email" 
-              required
+              {...register('email')}
               className="w-full p-2 border border-[#E2E8F0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4F46E5]"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-[#0F172A] mb-1">Password</label>
             <input 
               type="password" 
-              required
+              {...register('password')}
               className="w-full p-2 border border-[#E2E8F0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4F46E5]"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
           <button 
             type="submit"
-            className="cursor-pointer w-full bg-[#4F46E5] text-white py-2 rounded-md hover:bg-indigo-700 transition-colors font-medium"
+            disabled={isSubmitting}
+            className="cursor-pointer w-full bg-[#4F46E5] text-white py-2 rounded-md hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50"
           >
-            Log In
+            {isSubmitting ? 'Logging in...' : 'Log In'}
           </button>
         </form>
 
