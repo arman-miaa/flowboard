@@ -14,7 +14,7 @@ const register = async (payload: any) => {
     throw new ApiError(httpStatus.CONFLICT, 'Email already in use');
   }
 
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(Number(config.bcrypt_salt_rounds) || 10);
   const passwordHash = await bcrypt.hash(payload.password, salt);
 
   const user = await prisma.user.create({
@@ -31,8 +31,8 @@ const register = async (payload: any) => {
     name: user.name,
   };
 
-  const accessToken = jwt.sign(tokenPayload, config.jwt_secret as string, {
-    expiresIn: config.jwt_expires_in,
+  const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
+    expiresIn: config.jwt.expires_in,
   });
 
   return {
@@ -62,8 +62,8 @@ const login = async (payload: any) => {
     name: user.name,
   };
 
-  const accessToken = jwt.sign(tokenPayload, config.jwt_secret as string, {
-    expiresIn: config.jwt_expires_in,
+  const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
+    expiresIn: config.jwt.expires_in,
   });
 
   return {

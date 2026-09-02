@@ -4,7 +4,13 @@ import path from 'path';
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
-  port: process.env.PORT || 3001,
-  jwt_secret: process.env.JWT_SECRET || 'super-secret-jwt-key-for-flowboard-assessment',
-  jwt_expires_in: process.env.JWT_EXPIRES_IN || '7d',
+  env: process.env.NODE_ENV,
+  port: process.env.PORT,
+  jwt: {
+    secret: process.env.JWT_ACCESS_SECRET,
+    expires_in: process.env.JWT_ACCESS_EXPIRES,
+    refresh_secret: process.env.JWT_REFRESH_SECRET,
+    refresh_expires_in: process.env.JWT_REFRESH_EXPIRES,
+  },
+  bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUND,
 };

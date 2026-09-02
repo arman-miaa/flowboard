@@ -15,7 +15,7 @@ const auth = () => {
 
       let verifiedUser: JwtPayload;
       try {
-        verifiedUser = jwt.verify(token, config.jwt_secret as string) as JwtPayload;
+        verifiedUser = jwt.verify(token, config.jwt.secret as string) as JwtPayload;
       } catch (error) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
       }
