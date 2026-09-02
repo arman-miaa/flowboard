@@ -13,7 +13,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const userData = localStorage.getItem('flowboard_user');
-    if (!userData) {
+    if (!userData || userData === 'undefined') {
+      localStorage.removeItem('flowboard_user');
+      localStorage.removeItem('flowboard_token');
       router.push('/login');
       return;
     }
@@ -24,7 +26,7 @@ export default function Dashboard() {
   const fetchBoards = async () => {
     try {
       const res = await api.get('/boards');
-      setBoards(res.data);
+      setBoards(res.data.data || []);
     } catch (error) {
       console.error('Failed to fetch boards', error);
     } finally {
@@ -37,7 +39,7 @@ export default function Dashboard() {
     if (!name) return;
     try {
       const res = await api.post('/boards', { name, description: '' });
-      router.push(`/b/${res.data.id}`);
+      router.push(`/b/${res.data.data.id}`);
     } catch (error) {
       alert('Failed to create board');
     }
@@ -64,10 +66,10 @@ export default function Dashboard() {
           </h2>
         </div>
         <nav className="flex-1 px-4 space-y-2">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 text-[#0F172A] bg-[#F1F5F9] rounded-md font-medium">
+          <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-[#0F172A] bg-[#F1F5F9] rounded-md font-medium">
             <LayoutDashboard className="w-5 h-5 text-[#64748B]" /> Dashboard
           </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded-md font-medium transition-colors">
+          <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded-md font-medium transition-colors">
             <Users className="w-5 h-5" /> Shared with me
           </a>
         </nav>
@@ -81,7 +83,7 @@ export default function Dashboard() {
               <p className="text-xs text-[#64748B] truncate">{user?.email}</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors">
+          <button onClick={handleLogout} className="cursor-pointer mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors">
             <LogOut className="w-4 h-4" /> Log out
           </button>
         </div>
@@ -93,7 +95,7 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-[#0F172A]">My Boards</h1>
           <button 
             onClick={createBoard}
-            className="flex items-center gap-2 bg-[#4F46E5] text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
+            className="cursor-pointer flex items-center gap-2 bg-[#4F46E5] text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Create Board
           </button>

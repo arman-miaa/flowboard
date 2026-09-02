@@ -18,7 +18,7 @@ export default function BoardView() {
   const fetchBoard = async () => {
     try {
       const res = await api.get(`/boards/${params.id}`);
-      setBoard(res.data);
+      setBoard(res.data.data || null);
     } catch (error) {
       console.error('Failed to fetch board', error);
       // alert('Access denied or board not found');
@@ -81,7 +81,7 @@ export default function BoardView() {
               </div>
             ))}
           </div>
-          <button className="flex items-center gap-2 bg-white border border-[#E2E8F0] text-[#0F172A] px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium shadow-sm">
+          <button className="cursor-pointer flex items-center gap-2 bg-white border border-[#E2E8F0] text-[#0F172A] px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium shadow-sm">
             <Share className="w-4 h-4" /> Share
           </button>
         </div>
@@ -113,7 +113,7 @@ export default function BoardView() {
               <div className="p-3 border-t border-[#E2E8F0]/50">
                 <button 
                   onClick={() => createTask(column.id, column.tasks?.length || 0)}
-                  className="flex items-center gap-2 text-[#64748B] hover:text-[#0F172A] hover:bg-white w-full px-2 py-1.5 rounded transition-colors text-sm font-medium"
+                  className="cursor-pointer flex items-center gap-2 text-[#64748B] hover:text-[#0F172A] hover:bg-white w-full px-2 py-1.5 rounded transition-colors text-sm font-medium"
                 >
                   <Plus className="w-4 h-4" /> Add Task
                 </button>
@@ -124,7 +124,7 @@ export default function BoardView() {
           {/* Add Column Button */}
           <button 
             onClick={createColumn}
-            className="w-80 shrink-0 bg-white/50 border border-dashed border-[#CBD5E1] hover:border-[#4F46E5] hover:bg-white text-[#64748B] hover:text-[#4F46E5] rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
+            className="cursor-pointer w-80 shrink-0 bg-white/50 border border-dashed border-[#CBD5E1] hover:border-[#4F46E5] hover:bg-white text-[#64748B] hover:text-[#4F46E5] rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
           >
             <Plus className="w-5 h-5" /> Add Column
           </button>
