@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  boards       Board[]       @relation("OwnedBoards")
+  accesses     BoardAccess[]
+}
+
+model Board {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  ownerId     String
+  owner       User          @relation("OwnedBoards", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  accesses    BoardAccess[]
+  columns     Column[]
+}
+
+enum Role {
+  VIEWER
+  EDITOR
+}
+
+model BoardAccess {
+  id        String   @id @default(uuid())
+  boardId   String
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role
+  createdAt DateTime @default(now())
+
+  @@unique([boardId, userId])
+}
+
+model Column {
+  id        String   @id @default(uuid())
+  title     String
+  boardId   String
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks     Task[]
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  columnId    String
+  column      Column   @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  position    Int
+  assigneeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
