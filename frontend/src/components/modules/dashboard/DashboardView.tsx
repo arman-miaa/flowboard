@@ -8,6 +8,7 @@ import { DashboardSidebar } from './DashboardSidebar';
 import { BoardCard } from './BoardCard';
 import { DashboardHeader } from './DashboardHeader';
 import { Button } from '@/components/ui/button';
+import { CreateBoardModal } from '@/components/shared/modals/CreateBoardModal';
 
 export const DashboardView = () => {
   const [boards, setBoards] = useState<any[]>([]);
@@ -26,6 +27,8 @@ export const DashboardView = () => {
     fetchBoards();
   }, []);
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   const fetchBoards = async () => {
     try {
       const res = await boardService.getBoards();
@@ -34,17 +37,6 @@ export const DashboardView = () => {
       console.error('Failed to fetch boards', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const createBoard = async () => {
-    const name = prompt('Enter board name:');
-    if (!name) return;
-    try {
-      const res = await boardService.createBoard({ name, description: '' });
-      router.push(`/b/${res.data.id}`);
-    } catch (error) {
-      alert('Failed to create board');
     }
   };
 
@@ -68,7 +60,7 @@ export const DashboardView = () => {
         <main className="flex-1 p-8 overflow-y-auto">
           <header className="mb-8 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-foreground">My Boards</h1>
-            <Button onClick={createBoard} className="gap-2">
+            <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" /> Create Board
             </Button>
           </header>
@@ -82,7 +74,7 @@ export const DashboardView = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {myBoards.map(board => (
-                  <BoardCard key={board.id} board={board} />
+                  <BoardCard key={board.id} board={board} refreshBoards={fetchBoards} />
                 ))}
               </div>
             )}
@@ -104,6 +96,12 @@ export const DashboardView = () => {
           </section>
         </main>
       </div>
+      
+      <CreateBoardModal 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={fetchBoards}
+      />
     </div>
   );
 };

@@ -1,10 +1,88 @@
-export const TaskCard = ({ task }: { task: any }) => {
+import { useState } from 'react';
+import { AlignLeft, MoreHorizontal, Edit, Trash2 } from 'lucide-react';
+import { EditTaskModal } from '@/components/shared/modals/EditTaskModal';
+import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
+import { boardService } from '@/services/board/board.service';
+import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => void }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await boardService.deleteTask(task.id);
+      toast.success('Task deleted');
+      fetchBoard();
+    } catch (err) {
+      toast.error('Failed to delete task');
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
-    <div className="bg-card p-3 rounded shadow-sm border border-border hover:border-primary cursor-grab active:cursor-grabbing group transition-colors">
-      <h4 className="text-sm font-medium text-card-foreground leading-snug">{task.title}</h4>
-      {task.description && (
-        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{task.description}</p>
-      )}
-    </div>
+    <>
+      <div 
+        onClick={() => setIsEditModalOpen(true)}
+        className="bg-card p-3 rounded shadow-sm border border-border hover:border-primary cursor-pointer group transition-colors relative"
+      >
+        <div className="flex justify-between items-start gap-2">
+          <h4 className="text-sm font-medium text-card-foreground leading-snug">{task.title}</h4>
+          
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="text-muted-foreground hover:text-foreground p-0.5 rounded-sm">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+                  <Edit className="w-4 h-4 mr-2" /> Edit Task
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" /> Delete Task
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+
+        {task.description && (
+          <div className="flex items-center gap-3 text-muted-foreground mt-2">
+            <AlignLeft className="w-3.5 h-3.5" />
+          </div>
+        )}
+      </div>
+
+      <EditTaskModal 
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={fetchBoard}
+        task={task}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Task"
+        description="Are you sure you want to delete this task?"
+        isLoading={isDeleting}
+      />
+    </>
   );
 };
