@@ -45,8 +45,8 @@ export const DashboardView = () => {
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-background text-foreground">Loading...</div>;
 
-  const myBoards = boards.filter(b => b.ownerId === user?.id);
-  const sharedBoards = boards.filter(b => b.ownerId !== user?.id);
+  const myBoards = boards.filter(b => b.ownerId === user?.userId);
+  const sharedBoards = boards.filter(b => b.ownerId !== user?.userId);
 
   return (
     <>
