@@ -109,7 +109,7 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = 
                 className={`bg-muted/50 p-4 rounded-lg min-h-[100px] transition-colors ${isEditingMode ? 'hover:bg-muted cursor-pointer' : ''}`}
               >
                 {description ? (
-                  <p className="whitespace-pre-wrap text-foreground text-sm leading-relaxed">{description}</p>
+                  <p className="whitespace-pre-wrap break-words text-foreground text-sm leading-relaxed">{description}</p>
                 ) : (
                   <p className="text-muted-foreground text-sm italic">No description provided.</p>
                 )}
