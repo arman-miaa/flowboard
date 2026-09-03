@@ -13,21 +13,25 @@ interface Props {
   onClose: () => void;
   onSuccess: () => void;
   task: { id: string; title: string; description?: string; columnId: string; position: number };
+  initialMode?: "view" | "edit";
 }
 
-export const EditTaskModal = ({ isOpen, onClose, onSuccess, task }: Props) => {
+export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = "view" }: Props) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [isEditingDescription, setIsEditingDescription] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [isEditingMode, setIsEditingMode] = useState(initialMode === "edit")
+
   useEffect(() => {
     if (isOpen && task) {
       setTitle(task.title)
       setDescription(task.description || "")
-      setIsEditingDescription(!task.description)
+      setIsEditingMode(initialMode === "edit")
+      setIsEditingDescription(initialMode === "edit" ? !task.description : false)
     }
-  }, [isOpen, task])
+  }, [isOpen, task, initialMode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,13 +66,19 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task }: Props) => {
           
           <div className="space-y-2">
             <Label htmlFor="edit-title" className="text-muted-foreground font-semibold">Title</Label>
-            <Input 
-              id="edit-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="text-lg font-medium h-12"
-              autoFocus={!task.description}
-            />
+            {isEditingMode ? (
+              <Input 
+                id="edit-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="text-lg font-medium h-12"
+                autoFocus={!task.description}
+              />
+            ) : (
+              <div className="text-lg font-medium h-12 flex items-center px-3 border border-transparent">
+                {title}
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -88,30 +98,41 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task }: Props) => {
                   autoFocus
                 />
                 <div className="flex items-center gap-2">
-                  <Button type="button" size="sm" onClick={() => setIsEditingDescription(false)} variant="secondary">
+                  <Button type="button" size="sm" onClick={() => setIsEditingDescription(false)} variant="secondary" className="cursor-pointer">
                     Cancel
                   </Button>
                 </div>
               </div>
             ) : (
               <div 
-                onClick={() => setIsEditingDescription(true)}
-                className="bg-muted/50 hover:bg-muted p-4 rounded-lg cursor-pointer min-h-[100px] transition-colors"
+                onClick={() => isEditingMode && setIsEditingDescription(true)}
+                className={`bg-muted/50 p-4 rounded-lg min-h-[100px] transition-colors ${isEditingMode ? 'hover:bg-muted cursor-pointer' : ''}`}
               >
                 {description ? (
                   <p className="whitespace-pre-wrap text-foreground text-sm leading-relaxed">{description}</p>
                 ) : (
-                  <p className="text-muted-foreground text-sm">Add a more detailed description...</p>
+                  <p className="text-muted-foreground text-sm italic">No description provided.</p>
                 )}
               </div>
             )}
           </div>
 
           <DialogFooter className="pt-4 border-t border-border">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>Close</Button>
-            <Button type="submit" disabled={loading || !title.trim() || (title === task?.title && description === (task?.description || ""))}>
-              {loading ? "Saving..." : "Save changes"}
-            </Button>
+            {isEditingMode ? (
+              <>
+                <Button type="button" variant="outline" onClick={onClose} disabled={loading} className="cursor-pointer">Cancel</Button>
+                <Button type="submit" disabled={loading || !title.trim() || (title === task?.title && description === (task?.description || ""))} className="cursor-pointer">
+                  {loading ? "Saving..." : "Save changes"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button type="button" variant="outline" onClick={onClose} className="cursor-pointer">Close</Button>
+                <Button type="button" onClick={(e) => { e.preventDefault(); setIsEditingMode(true); setIsEditingDescription(true); }} className="cursor-pointer">
+                  Edit Task
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>

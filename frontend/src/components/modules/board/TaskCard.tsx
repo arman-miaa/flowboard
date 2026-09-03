@@ -13,6 +13,7 @@ import {
 
 export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => void }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"view" | "edit">("view");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -33,7 +34,7 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
   return (
     <>
       <div 
-        onClick={() => setIsEditModalOpen(true)}
+        onClick={() => { setModalMode("view"); setIsEditModalOpen(true); }}
         className="bg-card p-3 rounded shadow-sm border border-border hover:border-primary cursor-pointer group transition-colors relative"
       >
         <div className="flex justify-between items-start gap-2">
@@ -45,12 +46,12 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
                 <MoreHorizontal className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+                <DropdownMenuItem onClick={() => { setModalMode("edit"); setIsEditModalOpen(true); }} className="cursor-pointer">
                   <Edit className="w-4 h-4 mr-2" /> Edit Task
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="text-destructive focus:text-destructive"
+                  className="text-destructive focus:text-destructive cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4 mr-2" /> Delete Task
                 </DropdownMenuItem>
@@ -71,6 +72,7 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
         onClose={() => setIsEditModalOpen(false)}
         onSuccess={fetchBoard}
         task={task}
+        initialMode={modalMode}
       />
 
       <ConfirmDeleteModal

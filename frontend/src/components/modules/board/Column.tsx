@@ -49,16 +49,16 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
           </div>
           
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none">
+            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none cursor-pointer">
               <MoreHorizontal className="w-4 h-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+              <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer">
                 <Edit className="w-4 h-4 mr-2" /> Edit Column
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="text-destructive focus:text-destructive"
+                className="text-destructive focus:text-destructive cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Column
               </DropdownMenuItem>
