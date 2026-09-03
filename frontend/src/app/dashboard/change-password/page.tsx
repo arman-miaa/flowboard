@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { changePassword } from "@/services/auth/changePassword"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
@@ -42,8 +43,7 @@ export default function ChangePasswordPage() {
           <form onSubmit={handleUpdate} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-1.5">Current Password</label>
-              <Input 
-                type="password" 
+              <PasswordInput 
                 value={currentPassword} 
                 onChange={(e) => setCurrentPassword(e.target.value)} 
                 placeholder="Enter current password"
@@ -52,8 +52,7 @@ export default function ChangePasswordPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-1.5">New Password</label>
-              <Input 
-                type="password" 
+              <PasswordInput 
                 value={newPassword} 
                 onChange={(e) => setNewPassword(e.target.value)} 
                 placeholder="Enter new password (min 6 characters)"
@@ -63,8 +62,7 @@ export default function ChangePasswordPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-1.5">Confirm New Password</label>
-              <Input 
-                type="password" 
+              <PasswordInput 
                 value={confirmPassword} 
                 onChange={(e) => setConfirmPassword(e.target.value)} 
                 placeholder="Confirm new password"

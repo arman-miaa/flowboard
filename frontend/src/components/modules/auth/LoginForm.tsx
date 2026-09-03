@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { useEffect } from 'react';
 
 export const LoginForm = () => {
@@ -58,10 +59,12 @@ export const LoginForm = () => {
             {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
           </div>
           <div className="space-y-1">
-            <Label htmlFor="password">Password</Label>
-            <Input 
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <Link href="/forgot-password" className="text-xs text-primary hover:underline font-medium">Forgot password?</Link>
+            </div>
+            <PasswordInput 
               id="password"
-              type="password" 
               {...register('password')}
             />
             {errors.password && <p className="text-destructive text-xs">{errors.password.message}</p>}
