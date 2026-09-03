@@ -81,7 +81,7 @@ export const DashboardHeader = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive cursor-pointer">
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive bg-destructive/10 hover:bg-destructive/20 focus:bg-destructive/20 focus:text-destructive cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

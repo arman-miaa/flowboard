@@ -2,6 +2,7 @@
 import { LayoutDashboard, Users, LogOut, User, Key, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogout: () => void }) => {
   const pathname = usePathname();
@@ -18,9 +19,12 @@ export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogo
   return (
     <aside className="w-64 bg-card border-r border-border hidden md:flex flex-col">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-primary flex items-center gap-2">
-          <LayoutDashboard className="w-6 h-6" /> FlowBoard
-        </h2>
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center relative bg-primary/10">
+            <Image src="/logo.png" alt="FlowBoard Logo" fill className="object-cover" />
+          </div>
+          <span className="text-xl font-bold text-primary tracking-tight">FlowBoard</span>
+        </Link>
       </div>
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
         <Link href="/dashboard" className={getLinkClasses('/dashboard')}>

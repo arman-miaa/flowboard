@@ -9,9 +9,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useEffect } from 'react';
 
 export const RegisterForm = () => {
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('flowboard_token');
+    if (token && token !== 'undefined') {
+      router.replace('/dashboard');
+    }
+  }, [router]);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema)
