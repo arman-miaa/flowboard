@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlignLeft, MoreHorizontal, Edit, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 import { EditTaskModal } from '@/components/shared/modals/EditTaskModal';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { boardService } from '@/services/board/board.service';
@@ -60,8 +60,8 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
         </div>
 
         {task.description && (
-          <div className="flex items-center gap-3 text-muted-foreground mt-2">
-            <AlignLeft className="w-3.5 h-3.5" />
+          <div className="mt-3 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            {task.description}
           </div>
         )}
       </div>

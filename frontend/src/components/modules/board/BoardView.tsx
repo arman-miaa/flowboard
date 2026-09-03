@@ -79,6 +79,7 @@ export const BoardView = ({ id }: { id: string }) => {
 
         try {
           await boardService.moveTask(draggableId, { columnId: startCol.id, position: destination.index });
+          fetchBoard();
         } catch (err) {
           console.error(err);
           fetchBoard();
@@ -99,6 +100,7 @@ export const BoardView = ({ id }: { id: string }) => {
 
         try {
           await boardService.moveTask(draggableId, { columnId: finishCol.id, position: destination.index });
+          fetchBoard();
         } catch (err) {
           console.error(err);
           fetchBoard();

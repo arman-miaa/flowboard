@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { boardService } from "@/services/board/board.service"
 import { toast } from "sonner"
+import { AlignLeft } from "lucide-react"
 
 interface Props {
   isOpen: boolean;
@@ -17,12 +18,14 @@ interface Props {
 export const EditTaskModal = ({ isOpen, onClose, onSuccess, task }: Props) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [isEditingDescription, setIsEditingDescription] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (isOpen && task) {
       setTitle(task.title)
       setDescription(task.description || "")
+      setIsEditingDescription(!task.description)
     }
   }, [isOpen, task])
 
@@ -49,32 +52,63 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task }: Props) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Edit task</DialogTitle>
+          <DialogTitle className="text-xl flex items-center gap-2">
+            Task Details
+          </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit} className="space-y-6 py-2">
+          
           <div className="space-y-2">
-            <Label htmlFor="edit-title">Task Title</Label>
+            <Label htmlFor="edit-title" className="text-muted-foreground font-semibold">Title</Label>
             <Input 
               id="edit-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              autoFocus
+              className="text-lg font-medium h-12"
+              autoFocus={!task.description}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="edit-description">Description</Label>
-            <Textarea 
-              id="edit-description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="resize-none"
-              rows={4}
-            />
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <AlignLeft className="w-4 h-4 text-muted-foreground" />
+              <Label htmlFor="edit-description" className="text-muted-foreground font-semibold">Description</Label>
+            </div>
+            
+            {isEditingDescription ? (
+              <div className="space-y-3">
+                <Textarea 
+                  id="edit-description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="resize-none min-h-[150px] p-4 text-base"
+                  placeholder="Add a more detailed description..."
+                  autoFocus
+                />
+                <div className="flex items-center gap-2">
+                  <Button type="button" size="sm" onClick={() => setIsEditingDescription(false)} variant="secondary">
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div 
+                onClick={() => setIsEditingDescription(true)}
+                className="bg-muted/50 hover:bg-muted p-4 rounded-lg cursor-pointer min-h-[100px] transition-colors"
+              >
+                {description ? (
+                  <p className="whitespace-pre-wrap text-foreground text-sm leading-relaxed">{description}</p>
+                ) : (
+                  <p className="text-muted-foreground text-sm">Add a more detailed description...</p>
+                )}
+              </div>
+            )}
           </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>Cancel</Button>
+
+          <DialogFooter className="pt-4 border-t border-border">
+            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>Close</Button>
             <Button type="submit" disabled={loading || !title.trim() || (title === task?.title && description === (task?.description || ""))}>
               {loading ? "Saving..." : "Save changes"}
             </Button>
