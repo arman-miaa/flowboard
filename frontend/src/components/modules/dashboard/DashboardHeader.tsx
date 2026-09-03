@@ -1,5 +1,5 @@
 "use client"
-import { Search, LogOut } from "lucide-react"
+import { Search, LogOut, User, Key } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/shared/ThemeToggle"
 import {
@@ -70,6 +70,17 @@ export const DashboardHeader = () => {
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('#')}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('#')}>
+                <Key className="mr-2 h-4 w-4" />
+                <span>Change Password</span>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive cursor-pointer">
