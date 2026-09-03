@@ -31,11 +31,11 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="bg-white p-8 rounded-lg shadow-sm border border-slate-200 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+      <div className="bg-card p-8 rounded-lg shadow-sm border border-border w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">Welcome to FlowBoard</h1>
-          <p className="text-slate-500 mt-2">Log in to manage your tasks</p>
+          <h1 className="text-2xl font-bold text-card-foreground">Welcome to FlowBoard</h1>
+          <p className="text-muted-foreground mt-2">Log in to manage your tasks</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -47,7 +47,7 @@ export const LoginForm = () => {
               {...register('email')}
               placeholder="m@example.com"
             />
-            {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+            {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
           </div>
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
@@ -56,19 +56,19 @@ export const LoginForm = () => {
               type="password" 
               {...register('password')}
             />
-            {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
+            {errors.password && <p className="text-destructive text-xs">{errors.password.message}</p>}
           </div>
           <Button 
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-[#4F46E5] hover:bg-indigo-700 text-white"
+            className="w-full"
           >
             {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-500">
-          Don't have an account? <Link href="/register" className="text-[#4F46E5] hover:underline font-medium">Sign up</Link>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Don't have an account? <Link href="/register" className="text-primary hover:underline font-medium">Sign up</Link>
         </p>
       </div>
     </div>

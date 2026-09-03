@@ -4,6 +4,7 @@ import { boardService } from '@/services/board/board.service';
 import { Plus } from 'lucide-react';
 import { BoardHeader } from './BoardHeader';
 import { Column } from './Column';
+import { DashboardHeader } from '../dashboard/DashboardHeader';
 
 export const BoardView = ({ id }: { id: string }) => {
   const [board, setBoard] = useState<any>(null);
@@ -52,11 +53,12 @@ export const BoardView = ({ id }: { id: string }) => {
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading board...</div>;
-  if (!board) return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Board not found</div>;
+  if (loading) return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Loading board...</div>;
+  if (!board) return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Board not found</div>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-background">
+      <DashboardHeader />
       <BoardHeader board={board} />
 
       <main className="flex-1 overflow-x-auto p-6">
@@ -68,7 +70,7 @@ export const BoardView = ({ id }: { id: string }) => {
           {/* Add Column Button */}
           <button 
             onClick={createColumn}
-            className="cursor-pointer w-80 shrink-0 bg-white/50 border border-dashed border-slate-300 hover:border-[#4F46E5] hover:bg-white text-slate-500 hover:text-[#4F46E5] rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
+            className="cursor-pointer w-80 shrink-0 bg-transparent border border-dashed border-border hover:border-primary hover:bg-card text-muted-foreground hover:text-primary rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
           >
             <Plus className="w-5 h-5" /> Add Column
           </button>
