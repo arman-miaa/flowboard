@@ -1,8 +1,9 @@
 import { serverFetch } from "@/lib/server-fetch";
 
 export const boardService = {
-  getBoards: async () => {
-    const res = await serverFetch.get("/boards");
+  getBoards: async (search?: string) => {
+    const query = search ? `?search=${encodeURIComponent(search)}` : "";
+    const res = await serverFetch.get(`/boards${query}`);
     if (!res.ok) throw new Error("Failed to fetch boards");
     return res.json();
   },

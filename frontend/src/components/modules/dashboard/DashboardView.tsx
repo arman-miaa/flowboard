@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { boardService } from '@/services/board/board.service';
 import { logoutUser } from '@/services/auth/logoutUser';
 import { Plus } from 'lucide-react';
@@ -13,6 +13,8 @@ export const DashboardView = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams?.get("q") || "";
 
   useEffect(() => {
     const userData = localStorage.getItem('flowboard_user');
@@ -21,15 +23,22 @@ export const DashboardView = () => {
       router.push('/login');
       return;
     }
-    setUser(JSON.parse(userData));
-    fetchBoards();
+    if (!user) {
+      setUser(JSON.parse(userData));
+    }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchBoards();
+    }
+  }, [query, user]);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const fetchBoards = async () => {
     try {
-      const res = await boardService.getBoards();
+      const res = await boardService.getBoards(query);
       setBoards(res.data || []);
     } catch (error) {
       console.error('Failed to fetch boards', error);

@@ -10,7 +10,8 @@ const createBoard = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllBoards = catchAsync(async (req: Request, res: Response) => {
-  const result = await BoardService.getAllBoards(req.user!.userId);
+  const searchTerm = req.query.search as string | undefined;
+  const result = await BoardService.getAllBoards(req.user!.userId, searchTerm);
   sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
 });
 

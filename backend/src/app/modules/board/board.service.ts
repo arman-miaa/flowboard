@@ -12,14 +12,22 @@ const createBoard = async (userId: string, payload: any) => {
   });
 };
 
-const getAllBoards = async (userId: string) => {
+const getAllBoards = async (userId: string, searchTerm?: string) => {
+  const whereConditions: any = {
+    OR: [
+      { ownerId: userId },
+      { accesses: { some: { userId } } },
+    ],
+  };
+
+  if (searchTerm) {
+    whereConditions.AND = {
+      name: { contains: searchTerm, mode: 'insensitive' }
+    };
+  }
+
   return prisma.board.findMany({
-    where: {
-      OR: [
-        { ownerId: userId },
-        { accesses: { some: { userId } } },
-      ],
-    },
+    where: whereConditions,
     include: {
       accesses: {
         include: { user: { select: { id: true, name: true, email: true } } }

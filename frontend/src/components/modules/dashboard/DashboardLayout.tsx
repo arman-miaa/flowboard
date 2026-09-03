@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardSidebar } from './DashboardSidebar';
 import { DashboardHeader } from './DashboardHeader';
+import { Suspense } from 'react';
 import { logoutUser } from '@/services/auth/logoutUser';
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -30,7 +31,9 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
     <div className="min-h-screen flex bg-background">
       <DashboardSidebar user={user} handleLogout={handleLogout} />
       <div className="flex-1 flex flex-col h-screen">
-        <DashboardHeader />
+        <Suspense fallback={<header className="h-16 border-b border-border bg-background" />}>
+          <DashboardHeader />
+        </Suspense>
         <main className="flex-1 overflow-y-auto">
           {children}
         </main>

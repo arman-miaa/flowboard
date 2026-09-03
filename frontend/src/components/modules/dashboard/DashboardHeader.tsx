@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { logoutUser } from "@/services/auth/logoutUser"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export const DashboardHeader = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [user, setUser] = useState<any>(null)
+  const [searchTerm, setSearchTerm] = useState(searchParams?.get("q") || "")
 
   useEffect(() => {
     const userData = localStorage.getItem('flowboard_user')
@@ -26,6 +28,20 @@ export const DashboardHeader = () => {
       setUser(JSON.parse(userData))
     }
   }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams?.toString() || "");
+      if (searchTerm) {
+        params.set("q", searchTerm);
+      } else {
+        params.delete("q");
+      }
+      router.replace(`?${params.toString()}`);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchTerm, router, searchParams]);
 
   const handleLogout = () => {
     logoutUser()
@@ -44,6 +60,8 @@ export const DashboardHeader = () => {
           <Input
             type="search"
             placeholder="Search boards..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-muted/50 pl-9 border-transparent focus-visible:ring-1 focus-visible:ring-primary"
           />
         </div>
