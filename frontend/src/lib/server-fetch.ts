@@ -10,6 +10,10 @@ const serverFetchHelper = async (endpoint: string, options: RequestInit): Promis
     if (!accessToken && typeof window !== 'undefined') {
         accessToken = localStorage.getItem('flowboard_token') || undefined;
     }
+    
+    if (accessToken === "undefined" || accessToken === "null") {
+        accessToken = undefined;
+    }
 
     //to stop recursion loop
     if (endpoint !== "/auth/refresh-token") {
@@ -27,6 +31,13 @@ const serverFetchHelper = async (endpoint: string, options: RequestInit): Promis
         },
         ...restOptions,
     });
+
+    if (response.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('flowboard_token');
+        localStorage.removeItem('flowboard_user');
+        document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        window.location.href = '/login';
+    }
 
     return response;
 }
