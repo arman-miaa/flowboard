@@ -93,7 +93,7 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = 
                   id="edit-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="resize-none min-h-[150px] p-4 text-base"
+                  className="resize-none min-h-[150px] p-4 text-base break-all"
                   placeholder="Add a more detailed description..."
                   autoFocus
                 />
@@ -109,7 +109,7 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = 
                 className={`bg-muted/50 p-4 rounded-lg min-h-[100px] transition-colors ${isEditingMode ? 'hover:bg-muted cursor-pointer' : ''}`}
               >
                 {description ? (
-                  <p className="whitespace-pre-wrap break-words text-foreground text-sm leading-relaxed">{description}</p>
+                  <p className="whitespace-pre-wrap break-all text-foreground text-sm leading-relaxed">{description}</p>
                 ) : (
                   <p className="text-muted-foreground text-sm italic">No description provided.</p>
                 )}
