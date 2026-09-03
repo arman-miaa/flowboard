@@ -47,16 +47,16 @@ export const BoardCard = ({ board, isShared, refreshBoards }: { board: any; isSh
           {!isShared && (
             <div className="absolute top-4 right-4" onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none">
+                <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none cursor-pointer">
                   <MoreVertical className="w-4 h-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+                  <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer">
                     <Edit className="w-4 h-4 mr-2" /> Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setIsDeleteModalOpen(true)}
-                    className="text-destructive focus:text-destructive"
+                    className="text-destructive focus:text-destructive cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4 mr-2" /> Delete
                   </DropdownMenuItem>
