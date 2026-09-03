@@ -27,7 +27,7 @@ export const CreateBoardModal = ({ isOpen, onClose, onSuccess }: Props) => {
       toast.success("Board created successfully")
       onClose()
       if (onSuccess) onSuccess()
-      router.push(`/b/${res.data.id}`)
+      router.push(`/dashboard/b/${res.data.id}`)
     } catch (err) {
       toast.error("Failed to create board")
     } finally {

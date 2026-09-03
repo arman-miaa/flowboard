@@ -36,8 +36,8 @@ export const BoardCard = ({ board, isShared, refreshBoards }: { board: any; isSh
   return (
     <>
       <div 
-        onClick={() => router.push(`/b/${board.id}`)}
-        className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer h-32 flex flex-col justify-between group relative"
+        onClick={() => router.push(`/dashboard/b/${board.id}`)}
+        className="group relative bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-primary/50 transition-all cursor-pointer h-[160px] flex flex-col justify-between overflow-hidden"
       >
         <div className="flex justify-between items-start">
           <h3 className="font-semibold text-card-foreground group-hover:text-primary transition-colors pr-6">

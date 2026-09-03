@@ -4,7 +4,7 @@ import { boardService } from '@/services/board/board.service';
 import { Plus } from 'lucide-react';
 import { BoardHeader } from './BoardHeader';
 import { Column } from './Column';
-import { DashboardHeader } from '@/components/modules/dashboard/DashboardHeader';
+
 import { CreateColumnModal } from '@/components/shared/modals/CreateColumnModal';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
@@ -111,8 +111,7 @@ export const BoardView = ({ id }: { id: string }) => {
   if (!board) return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Board not found</div>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <DashboardHeader />
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-background">
       <BoardHeader board={board} />
 
       <main className="flex-1 overflow-x-auto p-6">
