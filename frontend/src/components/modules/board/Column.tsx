@@ -53,12 +53,12 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
               <MoreHorizontal className="w-4 h-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer whitespace-nowrap">
                 <Edit className="w-4 h-4 mr-2" /> Edit Column
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="text-destructive focus:text-destructive cursor-pointer"
+                className="text-destructive focus:text-destructive cursor-pointer whitespace-nowrap"
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Column
               </DropdownMenuItem>
