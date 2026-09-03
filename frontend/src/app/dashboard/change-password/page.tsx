@@ -21,8 +21,7 @@ export default function ChangePasswordPage() {
 
     try {
       setLoading(true)
-      const token = localStorage.getItem('flowboard_access_token') || ''
-      await changePassword({ currentPassword, newPassword }, token)
+      await changePassword({ currentPassword, newPassword })
       
       toast.success("Password changed successfully")
       setCurrentPassword("")

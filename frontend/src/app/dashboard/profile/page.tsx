@@ -32,12 +32,13 @@ export default function ProfilePage() {
 
     try {
       setLoading(true)
-      const token = localStorage.getItem('flowboard_access_token') || ''
-      const res = await updateProfile({ name, phone, address }, token)
+      const res = await updateProfile({ name, phone, address })
       
-      localStorage.setItem('flowboard_user', JSON.stringify(res.user))
-      if (res.accessToken) {
-        localStorage.setItem('flowboard_access_token', res.accessToken)
+      localStorage.setItem('flowboard_user', JSON.stringify(res.data.user))
+      if (res.data.accessToken) {
+        localStorage.setItem('flowboard_token', res.data.accessToken)
+        // Ensure cookie is also updated
+        document.cookie = `accessToken=${res.data.accessToken}; path=/; max-age=86400;`
       }
       toast.success("Profile updated successfully")
       // Quick reload to update avatar/header (could use a global store, but reload is easiest)

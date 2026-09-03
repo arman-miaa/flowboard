@@ -12,11 +12,8 @@ export const changePasswordSchema = z.object({
 
 export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 
-export const changePassword = async (data: Omit<ChangePasswordData, "confirmPassword">, token: string) => {
+export const changePassword = async (data: Omit<ChangePasswordData, "confirmPassword">) => {
   const response = await serverFetch.patch("/auth/change-password", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify(data),
   });
   

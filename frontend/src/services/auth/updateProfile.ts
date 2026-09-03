@@ -9,11 +9,8 @@ export const updateProfileSchema = z.object({
 
 export type UpdateProfileData = z.infer<typeof updateProfileSchema>;
 
-export const updateProfile = async (data: UpdateProfileData, token: string) => {
+export const updateProfile = async (data: UpdateProfileData) => {
   const response = await serverFetch.patch("/auth/profile", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify(data),
   });
   
