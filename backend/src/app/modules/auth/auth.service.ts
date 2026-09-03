@@ -32,7 +32,7 @@ const register = async (payload: any) => {
   };
 
   const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
-    expiresIn: config.jwt.expires_in,
+    expiresIn: config.jwt.expires_in as any,
   });
 
   return {
@@ -63,7 +63,7 @@ const login = async (payload: any) => {
   };
 
   const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
-    expiresIn: config.jwt.expires_in,
+    expiresIn: config.jwt.expires_in as any,
   });
 
   return {
@@ -72,7 +72,55 @@ const login = async (payload: any) => {
   };
 };
 
+const updateProfile = async (userId: string, payload: { name: string }) => {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { name: payload.name },
+  });
+
+  const tokenPayload = {
+    userId: user.id,
+    email: user.email,
+    name: user.name,
+  };
+
+  const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
+    expiresIn: config.jwt.expires_in as any,
+  });
+
+  return {
+    accessToken,
+    user: tokenPayload,
+  };
+};
+
+const changePassword = async (userId: string, payload: any) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const isPasswordMatched = await bcrypt.compare(payload.currentPassword, user.passwordHash);
+
+  if (!isPasswordMatched) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect current password');
+  }
+
+  const salt = await bcrypt.genSalt(Number(config.bcrypt_salt_rounds) || 10);
+  const passwordHash = await bcrypt.hash(payload.newPassword, salt);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
+};
+
 export const AuthService = {
   register,
   login,
+  updateProfile,
+  changePassword,
 };

@@ -4,9 +4,7 @@ import { useRouter } from 'next/navigation';
 import { boardService } from '@/services/board/board.service';
 import { logoutUser } from '@/services/auth/logoutUser';
 import { Plus } from 'lucide-react';
-import { DashboardSidebar } from './DashboardSidebar';
 import { BoardCard } from './BoardCard';
-import { DashboardHeader } from './DashboardHeader';
 import { Button } from '@/components/ui/button';
 import { CreateBoardModal } from '@/components/shared/modals/CreateBoardModal';
 
@@ -51,50 +49,44 @@ export const DashboardView = () => {
   const sharedBoards = boards.filter(b => b.ownerId !== user?.id);
 
   return (
-    <div className="min-h-screen flex bg-background">
-      <DashboardSidebar user={user} handleLogout={handleLogout} />
+    <>
+      <div className="p-8">
+        <header className="mb-8 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-foreground">My Boards</h1>
+          <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
+            <Plus className="w-4 h-4" /> Create Board
+          </Button>
+        </header>
 
-      <div className="flex-1 flex flex-col h-screen">
-        <DashboardHeader />
-        
-        <main className="flex-1 p-8 overflow-y-auto">
-          <header className="mb-8 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-foreground">My Boards</h1>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="gap-2">
-              <Plus className="w-4 h-4" /> Create Board
-            </Button>
-          </header>
+        <section className="mb-10">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Owned by me</h2>
+          {myBoards.length === 0 ? (
+            <div className="text-center p-8 bg-card border border-border border-dashed rounded-lg">
+              <p className="text-muted-foreground">You don't have any boards yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {myBoards.map(board => (
+                <BoardCard key={board.id} board={board} refreshBoards={fetchBoards} />
+              ))}
+            </div>
+          )}
+        </section>
 
-          <section className="mb-10">
-            <h2 className="text-lg font-semibold text-foreground mb-4">Owned by me</h2>
-            {myBoards.length === 0 ? (
-              <div className="text-center p-8 bg-card border border-border border-dashed rounded-lg">
-                <p className="text-muted-foreground">You don't have any boards yet.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {myBoards.map(board => (
-                  <BoardCard key={board.id} board={board} refreshBoards={fetchBoards} />
-                ))}
-              </div>
-            )}
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Shared with me</h2>
-            {sharedBoards.length === 0 ? (
-              <div className="text-center p-8 bg-card border border-border border-dashed rounded-lg">
-                <p className="text-muted-foreground">No boards shared with you.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {sharedBoards.map(board => (
-                  <BoardCard key={board.id} board={board} isShared={true} />
-                ))}
-              </div>
-            )}
-          </section>
-        </main>
+        <section>
+          <h2 className="text-lg font-semibold text-foreground mb-4">Shared with me</h2>
+          {sharedBoards.length === 0 ? (
+            <div className="text-center p-8 bg-card border border-border border-dashed rounded-lg">
+              <p className="text-muted-foreground">No boards shared with you.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {sharedBoards.map(board => (
+                <BoardCard key={board.id} board={board} isShared={true} />
+              ))}
+            </div>
+          )}
+        </section>
       </div>
       
       <CreateBoardModal 
@@ -102,6 +94,6 @@ export const DashboardView = () => {
         onClose={() => setIsCreateModalOpen(false)}
         onSuccess={fetchBoards}
       />
-    </div>
+    </>
   );
 };

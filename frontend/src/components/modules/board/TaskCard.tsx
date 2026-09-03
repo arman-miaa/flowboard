@@ -41,10 +41,8 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
           
           <div className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="text-muted-foreground hover:text-foreground p-0.5 rounded-sm">
-                  <MoreHorizontal className="w-4 h-4" />
-                </button>
+              <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground p-0.5 rounded-sm outline-none">
+                <MoreHorizontal className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>

@@ -53,14 +53,12 @@ export const DashboardHeader = () => {
         <ThemeToggle />
         
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="outline-none">
-              <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-transparent hover:ring-primary/50 transition-all">
-                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                  {user?.name?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-            </button>
+          <DropdownMenuTrigger className="outline-none">
+            <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-transparent hover:ring-primary/50 transition-all">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                {user?.name?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuGroup>
@@ -73,11 +71,11 @@ export const DashboardHeader = () => {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('#')}>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/dashboard/settings?tab=profile')}>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('#')}>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/dashboard/settings?tab=security')}>
                 <Key className="mr-2 h-4 w-4" />
                 <span>Change Password</span>
               </DropdownMenuItem>

@@ -20,4 +20,18 @@ router.post(
 
 router.get('/me', auth(), AuthController.getProfile);
 
+router.patch(
+  '/profile',
+  auth(),
+  validateRequest(AuthValidation.updateProfileZodSchema),
+  AuthController.updateProfile
+);
+
+router.patch(
+  '/change-password',
+  auth(),
+  validateRequest(AuthValidation.changePasswordZodSchema),
+  AuthController.changePassword
+);
+
 export const AuthRoutes = router;

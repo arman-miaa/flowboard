@@ -49,10 +49,8 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
           </div>
           
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1">
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
+            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none">
+              <MoreHorizontal className="w-4 h-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>

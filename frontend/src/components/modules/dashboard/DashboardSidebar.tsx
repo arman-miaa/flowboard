@@ -1,6 +1,20 @@
+"use client"
 import { LayoutDashboard, Users, LogOut, User, Key, Settings } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogout: () => void }) => {
+  const pathname = usePathname();
+
+  const getLinkClasses = (path: string) => {
+    const isActive = pathname === path || (pathname.startsWith('/dashboard/settings') && path === '/dashboard/settings');
+    return `cursor-pointer flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${
+      isActive 
+        ? 'text-foreground bg-accent' 
+        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+    }`;
+  };
+
   return (
     <aside className="w-64 bg-card border-r border-border hidden md:flex flex-col">
       <div className="p-6">
@@ -9,24 +23,24 @@ export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogo
         </h2>
       </div>
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
-        <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-foreground bg-accent rounded-md font-medium">
-          <LayoutDashboard className="w-5 h-5 text-muted-foreground" /> Dashboard
-        </a>
-        <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md font-medium transition-colors">
-          <Users className="w-5 h-5" /> Shared with me
-        </a>
+        <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
+          <LayoutDashboard className={`w-5 h-5 ${pathname === '/dashboard' ? 'text-primary' : ''}`} /> Dashboard
+        </Link>
+        <Link href="/dashboard/shared" className={getLinkClasses('/dashboard/shared')}>
+          <Users className={`w-5 h-5 ${pathname === '/dashboard/shared' ? 'text-primary' : ''}`} /> Shared with me
+        </Link>
         
         <div className="pt-4 mt-4 border-t border-border">
           <p className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Account</p>
-          <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md font-medium transition-colors">
-            <User className="w-5 h-5" /> Profile
-          </a>
-          <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md font-medium transition-colors">
+          <Link href="/dashboard/settings?tab=profile" className={getLinkClasses('/dashboard/settings?tab=profile')}>
+            <User className={`w-5 h-5 ${pathname.includes('settings') ? 'text-primary' : ''}`} /> Profile
+          </Link>
+          <Link href="/dashboard/settings?tab=security" className={getLinkClasses('/dashboard/settings?tab=security')}>
             <Key className="w-5 h-5" /> Change Password
-          </a>
-          <a href="#" className="cursor-pointer flex items-center gap-3 px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md font-medium transition-colors">
+          </Link>
+          <Link href="/dashboard/settings" className={getLinkClasses('/dashboard/settings')}>
             <Settings className="w-5 h-5" /> Settings
-          </a>
+          </Link>
         </div>
       </nav>
       <div className="p-4 border-t border-border mt-auto">
