@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export const updateProfileSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  phone: z.string().optional(),
+  address: z.string().optional(),
 });
 
 export type UpdateProfileData = z.infer<typeof updateProfileSchema>;

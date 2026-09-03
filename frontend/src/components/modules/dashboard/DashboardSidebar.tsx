@@ -7,7 +7,7 @@ export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogo
   const pathname = usePathname();
 
   const getLinkClasses = (path: string) => {
-    const isActive = pathname === path || (pathname.startsWith('/dashboard/settings') && path === '/dashboard/settings');
+    const isActive = pathname === path;
     return `cursor-pointer flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${
       isActive 
         ? 'text-foreground bg-accent' 
@@ -32,14 +32,11 @@ export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogo
         
         <div className="pt-4 mt-4 border-t border-border">
           <p className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Account</p>
-          <Link href="/dashboard/settings?tab=profile" className={getLinkClasses('/dashboard/settings?tab=profile')}>
-            <User className={`w-5 h-5 ${pathname.includes('settings') ? 'text-primary' : ''}`} /> Profile
+          <Link href="/dashboard/profile" className={getLinkClasses('/dashboard/profile')}>
+            <User className={`w-5 h-5 ${pathname === '/dashboard/profile' ? 'text-primary' : ''}`} /> Profile
           </Link>
-          <Link href="/dashboard/settings?tab=security" className={getLinkClasses('/dashboard/settings?tab=security')}>
-            <Key className="w-5 h-5" /> Change Password
-          </Link>
-          <Link href="/dashboard/settings" className={getLinkClasses('/dashboard/settings')}>
-            <Settings className="w-5 h-5" /> Settings
+          <Link href="/dashboard/change-password" className={getLinkClasses('/dashboard/change-password')}>
+            <Key className={`w-5 h-5 ${pathname === '/dashboard/change-password' ? 'text-primary' : ''}`} /> Change Password
           </Link>
         </div>
       </nav>

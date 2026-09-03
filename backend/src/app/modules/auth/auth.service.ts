@@ -29,6 +29,8 @@ const register = async (payload: any) => {
     userId: user.id,
     email: user.email,
     name: user.name,
+    phone: user.phone,
+    address: user.address,
   };
 
   const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
@@ -60,6 +62,8 @@ const login = async (payload: any) => {
     userId: user.id,
     email: user.email,
     name: user.name,
+    phone: user.phone,
+    address: user.address,
   };
 
   const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
@@ -72,16 +76,22 @@ const login = async (payload: any) => {
   };
 };
 
-const updateProfile = async (userId: string, payload: { name: string }) => {
+const updateProfile = async (userId: string, payload: { name: string; phone?: string; address?: string }) => {
   const user = await prisma.user.update({
     where: { id: userId },
-    data: { name: payload.name },
+    data: { 
+      name: payload.name,
+      ...(payload.phone && { phone: payload.phone }),
+      ...(payload.address && { address: payload.address }),
+    },
   });
 
   const tokenPayload = {
     userId: user.id,
     email: user.email,
     name: user.name,
+    phone: user.phone,
+    address: user.address,
   };
 
   const accessToken = jwt.sign(tokenPayload, config.jwt.secret as string, {
