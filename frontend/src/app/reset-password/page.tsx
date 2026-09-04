@@ -1,6 +1,6 @@
 'use client';
 import { useState, Suspense } from "react";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -73,9 +73,8 @@ function ResetPasswordForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
           <Label htmlFor="newPassword">New Password</Label>
-          <Input 
+          <PasswordInput 
             id="newPassword"
-            type="password" 
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="••••••••"
@@ -84,19 +83,21 @@ function ResetPasswordForm() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <Input 
+          <PasswordInput 
             id="confirmPassword"
-            type="password" 
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="••••••••"
             required
           />
+          {confirmPassword && newPassword !== confirmPassword && (
+            <p className="text-destructive text-xs">Passwords do not match</p>
+          )}
         </div>
         
         <Button 
           type="submit"
-          disabled={loading || !newPassword || !confirmPassword}
+          disabled={loading || !newPassword || !confirmPassword || newPassword !== confirmPassword}
           className="w-full flex items-center gap-2"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
