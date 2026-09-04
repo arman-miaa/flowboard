@@ -114,7 +114,7 @@ export const BoardView = ({ id }: { id: string }) => {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-background">
-      <BoardHeader board={board} />
+      <BoardHeader board={board} fetchBoard={fetchBoard} />
 
       <main className="flex-1 overflow-x-auto p-6">
         <DragDropContext onDragEnd={onDragEnd}>

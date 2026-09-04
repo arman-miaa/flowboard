@@ -14,5 +14,6 @@ router.delete('/:id', auth(), BoardController.deleteBoard);
 
 // Sharing route
 router.post('/:id/members', auth(), validateRequest(BoardValidation.shareBoardZodSchema), BoardController.shareBoard);
+router.delete('/:id/members/:memberId', auth(), BoardController.removeBoardMember);
 
 export const BoardRoutes = router;

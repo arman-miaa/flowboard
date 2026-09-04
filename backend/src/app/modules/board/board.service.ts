@@ -132,6 +132,16 @@ const shareBoard = async (userId: string, boardId: string, payload: { email: str
   return newAccess;
 };
 
+const removeBoardMember = async (userId: string, boardId: string, memberId: string) => {
+  const board = await prisma.board.findUnique({ where: { id: boardId }});
+  if (!board) throw new ApiError(httpStatus.NOT_FOUND, 'Board not found');
+  if (board.ownerId !== userId) throw new ApiError(httpStatus.FORBIDDEN, 'Only owner can remove members');
+
+  return prisma.boardAccess.delete({
+    where: { boardId_userId: { boardId, userId: memberId } },
+  });
+};
+
 export const BoardService = {
   createBoard,
   getAllBoards,
@@ -139,4 +149,5 @@ export const BoardService = {
   updateBoard,
   deleteBoard,
   shareBoard,
+  removeBoardMember,
 };

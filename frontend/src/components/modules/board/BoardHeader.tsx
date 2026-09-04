@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useState, useEffect } from 'react';
 import { ShareBoardModal } from '@/components/shared/modals/ShareBoardModal';
 
-export const BoardHeader = ({ board }: { board: any }) => {
+export const BoardHeader = ({ board, fetchBoard }: { board: any, fetchBoard: () => void }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
 
@@ -48,7 +48,8 @@ export const BoardHeader = ({ board }: { board: any }) => {
       <ShareBoardModal 
         isOpen={isShareModalOpen} 
         onClose={() => setIsShareModalOpen(false)} 
-        boardId={board.id} 
+        onSuccess={fetchBoard}
+        board={board} 
       />
     </>
   );

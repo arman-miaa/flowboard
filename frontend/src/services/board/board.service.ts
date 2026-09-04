@@ -97,5 +97,14 @@ export const boardService = {
       throw new Error(errorData.message || "Failed to share board");
     }
     return res.json();
+  },
+
+  removeBoardMember: async (boardId: string, memberId: string) => {
+    const res = await serverFetch.delete(`/boards/${boardId}/members/${memberId}`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to remove member");
+    }
+    return res.json();
   }
 };

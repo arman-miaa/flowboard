@@ -35,6 +35,11 @@ const shareBoard = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
 });
 
+const removeBoardMember = catchAsync(async (req: Request, res: Response) => {
+  await BoardService.removeBoardMember(req.user!.userId, req.params.id, req.params.memberId);
+  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Member removed' });
+});
+
 export const BoardController = {
   createBoard,
   getAllBoards,
@@ -42,4 +47,5 @@ export const BoardController = {
   updateBoard,
   deleteBoard,
   shareBoard,
+  removeBoardMember,
 };
