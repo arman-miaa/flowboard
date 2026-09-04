@@ -135,8 +135,7 @@ const forgotPassword = async (payload: { email: string }) => {
   });
 
   if (!user) {
-    // Return silently to prevent email enumeration
-    return;
+    throw new ApiError(httpStatus.NOT_FOUND, 'No account found with this email');
   }
 
   // Generate a short-lived reset token
