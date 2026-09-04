@@ -13,32 +13,39 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  # Uncomment to run backend via docker
-  # backend:
-  #   build:
-  #     context: ./backend
-  #   container_name: flowboard_backend
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     - DATABASE_URL=postgresql://postgres:password@postgres:5432/flowboard?schema=public
-  #     - JWT_SECRET=your_jwt_secret_key_here
-  #     - PORT=5000
-  #   depends_on:
-  #     - postgres
+  backend:
+    build:
+      context: ./backend
+    container_name: flowboard_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/flowboard?schema=public
+      - DIRECT_URL=postgresql://postgres:password@postgres:5432/flowboard?schema=public
+      - JWT_SECRET=supersecretjwtkey_flowboard_assessment
+      - JWT_EXPIRES_IN=7d
+      - PORT=5000
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-  # Uncomment to run frontend via docker
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #   container_name: flowboard_frontend
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
-  #   depends_on:
-  #     - backend
+  frontend:
+    build:
+      context: ./frontend
+    container_name: flowboard_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

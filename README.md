@@ -1,97 +1,132 @@
-# FlowBoard
+# FlowBoard - Mini Kanban Board
 
-FlowBoard is a modern, intuitive Mini Kanban Board designed to help teams organize tasks, collaborate in real-time, and streamline their workflow. It allows you to create customizable boards, manage columns, and move tasks with seamless drag-and-drop interactions.
+FlowBoard is a full-stack Kanban board application designed to amplify team velocity and reduce friction. It supports real-time collaboration, board sharing with granular access control, and seamless drag-and-drop task reordering.
 
-## 🚀 Features
+## Features
 
-- **Authentication & Authorization**: Secure token-based registration and login.
-- **Board Sharing**: Own boards and share access with other registered users securely.
-- **Role-based Access**: Users can only view or modify boards they have explicit access to.
-- **Interactive Kanban Board**: Fully functional drag-and-drop task movement.
-- **Workflow Management**: Create, edit, and delete boards, columns, and tasks.
-- **Order Consistency**: Stable task ordering algorithm for conflict-free rearranging.
-- **Dynamic Theming**: Full support for Dark & Light modes with a sleek UI built on Shadcn and Tailwind CSS.
-- **Fully Responsive**: Optimized for desktops, tablets, and mobile devices.
+- **Authentication**: JWT-based secure user registration and login.
+- **Workflow Management**: Create multiple boards, customize columns, and manage tasks easily.
+- **Task Movement**: Interactive drag-and-drop task movement with conflict-free order consistency.
+- **Collaboration & Sharing**: Share boards with other registered users as a `VIEWER` or `EDITOR`.
+- **Access Control**: Strict backend authorization rules preventing unauthorized cross-board access or mutations.
+- **Premium UI**: Modern, glassmorphism-inspired aesthetic built with Tailwind CSS.
 
----
+## Tech Stack
 
-## 🛠 Tech Stack
+- **Frontend**: Next.js 14, React (TypeScript), Tailwind CSS, dnd-kit, Lucide React
+- **Backend**: Node.js, Express.js (TypeScript), Zod
+- **Database**: PostgreSQL with Prisma ORM
+- **DevOps**: Docker, Docker Compose
 
-### Frontend
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4, Shadcn UI
-- **State Management**: Zustand
-- **Drag & Drop**: `@hello-pangea/dnd`
+## System Architecture
 
-### Backend
-- **Framework**: Express.js
-- **Language**: TypeScript
-- **Database ORM**: Prisma
-- **Database**: PostgreSQL
-- **Authentication**: JSON Web Tokens (JWT) & bcrypt
-
----
-
-## 📦 Local Setup Instructions
-
-### Prerequisites
-- Node.js (v18 or higher)
-- PostgreSQL (or Docker to run the database)
-- `pnpm` (recommended) or `npm`
-
-### 1. Database Setup (Docker - Recommended)
-A `docker-compose.yml` file is included to easily spin up a local PostgreSQL instance.
-
-```bash
-# Start the PostgreSQL database
-docker compose up -d postgres
+```mermaid
+graph TD
+    Client[Client Browser / Frontend App]
+    Client -->|REST API| Express[Express Backend API]
+    
+    subgraph Backend Services
+    Express --> Auth[Auth Middleware]
+    Auth --> TaskSvc[Task Service]
+    Auth --> BoardSvc[Board Service]
+    Auth --> ColSvc[Column Service]
+    end
+    
+    TaskSvc --> Prisma[Prisma ORM]
+    BoardSvc --> Prisma
+    ColSvc --> Prisma
+    
+    Prisma --> DB[(PostgreSQL)]
 ```
 
-### 2. Backend Setup
-Navigate into the backend directory and set up the environment.
+## Database Schema
 
-```bash
-cd backend
+```mermaid
+erDiagram
+    User ||--o{ Board : "owns"
+    User ||--o{ BoardAccess : "has access to"
+    Board ||--o{ Column : "contains"
+    Board ||--o{ BoardAccess : "is shared via"
+    Column ||--o{ Task : "contains"
+    
+    User {
+        String id
+        String name
+        String email
+        String passwordHash
+    }
+    Board {
+        String id
+        String name
+        String ownerId
+    }
+    BoardAccess {
+        String id
+        String role
+        String boardId
+        String userId
+    }
+    Column {
+        String id
+        String title
+        Int position
+    }
+    Task {
+        String id
+        String title
+        Int position
+    }
 ```
 
-Create a `.env` file in the `backend` directory based on the `.env.example`:
-```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/flowboard?schema=public"
-PORT=5000
-JWT_SECRET="your_super_secret_jwt_key_here"
-```
+## Setup Instructions
 
-Install dependencies, run migrations, and start the server:
-```bash
-pnpm install
-npx prisma generate
-npx prisma migrate dev --name init
-pnpm run dev
-```
-The backend API will run on `http://localhost:5000`.
+You can run this project using Docker (Recommended) or locally.
 
-### 3. Frontend Setup
-Open a new terminal, navigate into the frontend directory, and set up the environment.
+### 1. Run with Docker (Recommended)
 
-```bash
-cd frontend
-```
+1. Clone the repository and navigate to the project root.
+2. Run the following command to spin up the database, backend, and frontend:
+   ```bash
+   docker-compose up --build
+   ```
+3. Access the application at [http://localhost:3000](http://localhost:3000).
 
-Create a `.env.local` file in the `frontend` directory:
-```env
-NEXT_PUBLIC_API_URL="http://localhost:5000/api/v1"
-```
+*(Note: The database migrations run automatically inside the backend container).*
 
-Install dependencies and start the development server:
-```bash
-pnpm install
-pnpm run dev
-```
-The application will run on `http://localhost:3000`.
+### 2. Manual Local Setup
 
----
+**Prerequisites:**
+- Node.js (v18+)
+- PostgreSQL running locally.
 
-## 🏗 System Architecture & Task Movement
-- **Task Order Logic**: Tasks are stored with a unique `position` index. When a task is moved via drag-and-drop (within the same column or across columns), the system calculates the new order index by averaging the position values of the adjacent tasks. This ensures `O(1)` time complexity for movement operations without requiring bulk updates to sibling tasks.
-- **Access Control**: A centralized middleware validates tokens and ensures users are authorized via a `BoardShare` relational table before performing any mutations.
+**Backend Setup:**
+1. Navigate to the `backend` directory: `cd backend`
+2. Install dependencies: `npm install`
+3. Create a `.env` file based on the sample:
+   ```env
+   DATABASE_URL="postgresql://postgres:password@localhost:5432/flowboard?schema=public"
+   PORT=5000
+   JWT_SECRET="supersecretjwtkey_flowboard"
+   JWT_EXPIRES_IN="7d"
+   FRONTEND_URL="http://localhost:3000"
+   ```
+4. Push the schema to your database: `npx prisma db push`
+5. Start the server: `npm run dev`
+
+**Frontend Setup:**
+1. Navigate to the `frontend` directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Create a `.env` file:
+   ```env
+   NEXT_PUBLIC_API_URL="http://localhost:5000/api/v1"
+   ```
+4. Start the application: `npm run dev`
+
+## Core API Endpoints
+
+- `POST /api/v1/auth/register` - Register a new user
+- `POST /api/v1/auth/login` - Authenticate and get JWT
+- `GET /api/v1/boards` - Fetch all accessible boards
+- `POST /api/v1/boards/:id/share` - Share board with a user
+- `POST /api/v1/columns` - Create a column inside a board
+- `PATCH /api/v1/tasks/:id/move` - Move task within/across columns securely
