@@ -32,7 +32,8 @@ const serverFetchHelper = async (endpoint: string, options: RequestInit): Promis
         ...restOptions,
     });
 
-    if (response.status === 401 && typeof window !== 'undefined') {
+    const isAuthEndpoint = endpoint.includes('/auth/login') || endpoint.includes('/auth/register') || endpoint.includes('/auth/forgot-password') || endpoint.includes('/auth/reset-password');
+    if (response.status === 401 && typeof window !== 'undefined' && !isAuthEndpoint) {
         localStorage.removeItem('flowboard_token');
         localStorage.removeItem('flowboard_user');
         document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
