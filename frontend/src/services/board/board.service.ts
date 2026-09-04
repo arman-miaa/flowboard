@@ -86,5 +86,16 @@ export const boardService = {
     });
     if (!res.ok) throw new Error("Failed to move task");
     return res.json();
+  },
+
+  shareBoard: async (boardId: string, data: { email: string; role: string }) => {
+    const res = await serverFetch.post(`/boards/${boardId}/members`, {
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to share board");
+    }
+    return res.json();
   }
 };

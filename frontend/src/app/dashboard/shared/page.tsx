@@ -35,7 +35,7 @@ export default function SharedBoardsPage() {
     return <div className="p-8 text-muted-foreground animate-pulse">Loading shared boards...</div>;
   }
 
-  const sharedBoards = boards.filter(b => b.ownerId !== user?.id);
+  const sharedBoards = boards.filter(b => b.ownerId !== user?.userId);
 
   return (
     <div className="flex-1 p-8 overflow-y-auto bg-background">

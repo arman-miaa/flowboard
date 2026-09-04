@@ -2,10 +2,25 @@ import { Share } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useState, useEffect } from 'react';
+import { ShareBoardModal } from '@/components/shared/modals/ShareBoardModal';
 
 export const BoardHeader = ({ board }: { board: any }) => {
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('flowboard_user');
+    if (userData && userData !== 'undefined') {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const isOwner = user?.userId === board.ownerId;
+
   return (
-    <div className="bg-card border-b border-border px-6 py-3 flex items-center justify-between">
+    <>
+      <div className="bg-card border-b border-border px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Link href="/dashboard" className="text-muted-foreground hover:text-foreground text-sm font-medium">
           ← Dashboard
@@ -22,10 +37,19 @@ export const BoardHeader = ({ board }: { board: any }) => {
             </Avatar>
           ))}
         </div>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Share className="w-4 h-4" /> Share
-        </Button>
+        {isOwner && (
+          <Button variant="outline" size="sm" className="gap-2 cursor-pointer" onClick={() => setIsShareModalOpen(true)}>
+            <Share className="w-4 h-4" /> Share
+          </Button>
+        )}
       </div>
     </div>
+      
+      <ShareBoardModal 
+        isOpen={isShareModalOpen} 
+        onClose={() => setIsShareModalOpen(false)} 
+        boardId={board.id} 
+      />
+    </>
   );
 };
