@@ -118,7 +118,7 @@ You can run this project using Docker (Recommended) or locally.
 2. Install dependencies: `npm install`
 3. Create a `.env` file:
    ```env
-   NEXT_PUBLIC_API_URL="http://localhost:5000/api/v1"
+   NEXT_PUBLIC_BASE_API_URL="http://localhost:5000/api/v1"
    ```
 4. Start the application: `npm run dev`
 

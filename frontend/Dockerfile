@@ -11,7 +11,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Pass build-time environment variables
-ENV NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+ENV NEXT_PUBLIC_BASE_API_URL=http://localhost:5000/api/v1
 
 RUN pnpm run build
 
