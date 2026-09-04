@@ -13,4 +13,9 @@ export default {
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES,
   },
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUND,
+  smtpHost: process.env.SMTP_HOST,
+  smtpPort: process.env.SMTP_PORT,
+  smtpUser: process.env.SMTP_USER,
+  smtpPass: process.env.SMTP_PASS,
+  smtpFrom: process.env.SMTP_FROM,
 };

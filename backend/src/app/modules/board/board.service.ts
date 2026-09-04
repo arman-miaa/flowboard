@@ -2,6 +2,7 @@ import prisma from '../../config/prisma';
 import ApiError from '../../errorHelpers/ApiError';
 import httpStatus from 'http-status-codes';
 import { Role } from '@prisma/client';
+import { sendEmail } from '../../utils/email';
 
 const createBoard = async (userId: string, payload: any) => {
   return prisma.board.create({
@@ -106,13 +107,26 @@ const shareBoard = async (userId: string, boardId: string, payload: { email: str
     });
   }
 
-  return prisma.boardAccess.create({
+  const newAccess = await prisma.boardAccess.create({
     data: {
       boardId,
       userId: targetUser.id,
       role: payload.role,
     }
   });
+
+  const inviteLink = `${process.env.FRONTEND_URL}/dashboard/shared`;
+  await sendEmail(
+    targetUser.email,
+    'You have been invited to a FlowBoard',
+    `<p>Hello ${targetUser.name},</p>
+    <p>You have been invited to collaborate on the board <strong>${board.name}</strong> as a <strong>${payload.role}</strong>.</p>
+    <p>Click <a href="${inviteLink}">here</a> to view your shared boards.</p>
+    <br/>
+    <p>Thanks,<br/>The FlowBoard Team</p>`
+  );
+
+  return newAccess;
 };
 
 export const BoardService = {
