@@ -60,7 +60,7 @@ export const ShareBoardModal = ({ isOpen, onClose, onSuccess, boardId }: Props) 
           
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select disabled={loading} value={role} onValueChange={setRole}>
+            <Select disabled={loading} value={role} onValueChange={(val) => val && setRole(val)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
