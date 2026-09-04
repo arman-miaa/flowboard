@@ -72,7 +72,7 @@ export default function AboutPage() {
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-70" />
               <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-20">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden flex items-center justify-center relative bg-background shadow-xl mb-6 group-hover:scale-110 transition-transform duration-500">
-                  <Image src="/logo.png" alt="FlowBoard" fill className="object-cover" />
+                  <Image src="/flowboard.png" alt="FlowBoard" fill className="object-cover" />
                 </div>
                 <h4 className="text-xl font-bold text-foreground">Designed in California</h4>
                 <p className="text-muted-foreground mt-2">Built for the world.</p>

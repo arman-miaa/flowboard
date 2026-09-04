@@ -21,7 +21,7 @@ export const DashboardSidebar = ({ user, handleLogout }: { user: any; handleLogo
       <div className="p-6">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center relative bg-primary/10">
-            <Image src="/logo.png" alt="FlowBoard Logo" fill className="object-cover" />
+            <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
           </div>
           <span className="text-xl font-bold text-primary tracking-tight">FlowBoard</span>
         </Link>

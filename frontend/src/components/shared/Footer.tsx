@@ -10,7 +10,7 @@ export function Footer() {
           <div className="md:col-span-1 flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center relative bg-primary/10">
-                <Image src="/logo.png" alt="FlowBoard Logo" fill className="object-cover" />
+                <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
               </div>
               <span className="font-bold text-xl tracking-tight text-foreground">FlowBoard</span>
             </div>
