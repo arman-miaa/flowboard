@@ -104,11 +104,31 @@ You can run this project using Docker (Recommended) or locally.
 2. Install dependencies: `npm install`
 3. Create a `.env` file based on the sample:
    ```env
-   DATABASE_URL="postgresql://postgres:password@localhost:5432/flowboard?schema=public"
    PORT=5000
-   JWT_SECRET="supersecretjwtkey_flowboard"
-   JWT_EXPIRES_IN="7d"
+   NODE_ENV=development
+   
+   # Database Connections
+   DATABASE_URL="postgresql://user:password@host:5432/db?pgbouncer=true"
+   DIRECT_URL="postgresql://user:password@host:5432/db"
+
+   # JWT
+   JWT_ACCESS_SECRET="your_access_secret"
+   JWT_ACCESS_EXPIRES="1d"
+   JWT_REFRESH_SECRET="your_refresh_secret"
+   JWT_REFRESH_EXPIRES="7d"
+
+   # Security
+   BCRYPT_SALT_ROUND=10
+
+   # App URLs
    FRONTEND_URL="http://localhost:3000"
+
+   # SMTP for Emails
+   SMTP_HOST="smtp.gmail.com"
+   SMTP_PORT=465
+   SMTP_USER="your-email@gmail.com"
+   SMTP_PASS="your-app-password"
+   SMTP_FROM="your-email@gmail.com"
    ```
 4. Push the schema to your database: `npx prisma db push`
 5. Start the server: `npm run dev`
@@ -119,6 +139,12 @@ You can run this project using Docker (Recommended) or locally.
 3. Create a `.env` file:
    ```env
    NEXT_PUBLIC_BASE_API_URL="http://localhost:5000/api/v1"
+   
+   # JWT Config matching backend (for edge middleware verification)
+   JWT_ACCESS_SECRET="your_access_secret"
+   JWT_ACCESS_EXPIRES="1d"
+   JWT_REFRESH_SECRET="your_refresh_secret"
+   JWT_REFRESH_EXPIRES="7d"
    ```
 4. Start the application: `npm run dev`
 
@@ -126,7 +152,10 @@ You can run this project using Docker (Recommended) or locally.
 
 - `POST /api/v1/auth/register` - Register a new user
 - `POST /api/v1/auth/login` - Authenticate and get JWT
+- `POST /api/v1/auth/forgot-password` - Request a password reset link
+- `POST /api/v1/auth/reset-password` - Set a new password
 - `GET /api/v1/boards` - Fetch all accessible boards
-- `POST /api/v1/boards/:id/share` - Share board with a user
+- `POST /api/v1/boards/:id/share` - Share board with a user or update role
+- `DELETE /api/v1/boards/:id/members/:memberId` - Remove a member's access from a board
 - `POST /api/v1/columns` - Create a column inside a board
 - `PATCH /api/v1/tasks/:id/move` - Move task within/across columns securely
