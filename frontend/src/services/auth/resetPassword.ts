@@ -1,10 +1,9 @@
 import { serverFetch } from '@/lib/server-fetch';
 
-export const resetPassword = async (payload: any) => {
-  const res = await serverFetch('/auth/reset-password', {
-    method: 'POST',
+export const resetPassword = async (payload: { token: string; newPassword: string }) => {
+  const response = await serverFetch.post('/auth/reset-password', {
     body: JSON.stringify(payload),
   });
 
-  return res;
+  return response.json();
 };

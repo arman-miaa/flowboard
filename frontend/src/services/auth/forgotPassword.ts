@@ -1,10 +1,9 @@
 import { serverFetch } from '@/lib/server-fetch';
 
 export const forgotPassword = async (email: string) => {
-  const res = await serverFetch('/auth/forgot-password', {
-    method: 'POST',
+  const response = await serverFetch.post('/auth/forgot-password', {
     body: JSON.stringify({ email }),
   });
 
-  return res;
+  return response.json();
 };
