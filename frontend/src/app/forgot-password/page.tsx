@@ -7,6 +7,7 @@ import Link from "next/link";
 import { forgotPassword } from "@/services/auth/forgotPassword";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -42,7 +43,10 @@ export default function ForgotPasswordPage() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         
-        <div className="text-center mb-8 mt-2">
+        <div className="text-center mb-8 mt-2 flex flex-col items-center">
+          <div className="w-16 h-16 mb-4 relative rounded-2xl overflow-hidden shadow-sm">
+            <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
+          </div>
           <h1 className="text-2xl font-bold text-card-foreground">Reset Password</h1>
           <p className="text-muted-foreground mt-2">
             Enter your email and we'll send you a reset link.

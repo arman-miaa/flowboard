@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: "Organize tasks, collaborate in real-time, and streamline your workflow.",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/flowboard.png",
   }
 };
 

@@ -43,7 +43,7 @@ export function Navbar() {
         <div className="flex-1 flex items-center">
           <Link href="/" className="flex items-center gap-2 cursor-pointer">
             <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center relative">
-              <Image src="/logo.png" alt="FlowBoard Logo" fill className="object-cover" />
+              <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
             </div>
             <span className="font-bold text-xl tracking-tight hidden sm:block">FlowBoard</span>
           </Link>

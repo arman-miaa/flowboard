@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/services/auth/resetPassword";
+import Image from "next/image";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -63,12 +64,15 @@ function ResetPasswordForm() {
 
   return (
     <>
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-card-foreground">Set New Password</h1>
-        <p className="text-muted-foreground mt-2">
-          Please enter your new password below.
-        </p>
-      </div>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="w-16 h-16 mb-4 relative rounded-2xl overflow-hidden shadow-sm">
+            <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
+          </div>
+          <h1 className="text-2xl font-bold text-card-foreground">Set New Password</h1>
+          <p className="text-muted-foreground mt-2">
+            Please enter your new password below.
+          </p>
+        </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">

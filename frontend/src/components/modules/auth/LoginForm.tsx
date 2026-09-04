@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { loginUser, loginSchema, LoginData } from '@/services/auth/loginUser';
 import { setCookie } from '@/services/auth/tokenHandlers';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,7 +43,10 @@ export const LoginForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
       <div className="bg-card p-8 rounded-lg shadow-sm border border-border w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="w-16 h-16 mb-4 relative rounded-2xl overflow-hidden shadow-sm">
+            <Image src="/flowboard.png" alt="FlowBoard Logo" fill className="object-cover" />
+          </div>
           <h1 className="text-2xl font-bold text-card-foreground">Welcome to FlowBoard</h1>
           <p className="text-muted-foreground mt-2">Log in to manage your tasks</p>
         </div>
