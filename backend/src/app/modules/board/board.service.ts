@@ -57,13 +57,16 @@ const getSingleBoard = async (userId: string, boardId: string) => {
 
   if (!board) throw new ApiError(httpStatus.NOT_FOUND, 'Board not found');
   
-  // Check viewer access
-  if (board.ownerId !== userId) {
-    const hasAccess = board.accesses.some(a => a.userId === userId);
-    if (!hasAccess) throw new ApiError(httpStatus.FORBIDDEN, 'Not allowed to view this board');
+  let userRole = 'VIEWER';
+  if (board.ownerId === userId) {
+    userRole = 'OWNER';
+  } else {
+    const access = board.accesses.find(a => a.userId === userId);
+    if (!access) throw new ApiError(httpStatus.FORBIDDEN, 'Not allowed to view this board');
+    userRole = access.role;
   }
 
-  return board;
+  return { ...board, userRole };
 };
 
 const updateBoard = async (userId: string, boardId: string, payload: any) => {

@@ -14,9 +14,10 @@ interface Props {
   onSuccess: () => void;
   task: { id: string; title: string; description?: string; columnId: string; position: number };
   initialMode?: "view" | "edit";
+  userRole?: string;
 }
 
-export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = "view" }: Props) => {
+export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = "view", userRole }: Props) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [isEditingDescription, setIsEditingDescription] = useState(false)
@@ -128,9 +129,11 @@ export const EditTaskModal = ({ isOpen, onClose, onSuccess, task, initialMode = 
             ) : (
               <>
                 <Button type="button" variant="outline" onClick={onClose} className="cursor-pointer">Close</Button>
-                <Button type="button" onClick={(e) => { e.preventDefault(); setIsEditingMode(true); setIsEditingDescription(true); }} className="cursor-pointer">
-                  Edit Task
-                </Button>
+                {userRole !== 'VIEWER' && (
+                  <Button type="button" onClick={(e) => { e.preventDefault(); setIsEditingMode(true); setIsEditingDescription(true); }} className="cursor-pointer">
+                    Edit Task
+                  </Button>
+                )}
               </>
             )}
           </DialogFooter>

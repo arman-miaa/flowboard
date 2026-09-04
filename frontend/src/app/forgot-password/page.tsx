@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { forgotPassword } from "@/services/auth/forgotPassword";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
@@ -12,16 +13,23 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate network request
-    setTimeout(() => {
+    try {
+      const res = await forgotPassword(email);
+      if (res.success) {
+        setSubmitted(true);
+        toast.success(res.message || "Reset link sent!");
+      } else {
+        toast.error(res.message || "Failed to send reset link");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-      toast.success("Reset link sent!");
-    }, 1500);
+    }
   };
 
   return (

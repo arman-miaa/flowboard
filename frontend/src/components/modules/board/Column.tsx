@@ -14,7 +14,7 @@ import { boardService } from '@/services/board/board.service';
 import { toast } from 'sonner';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 
-export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; fetchBoard: () => void; dragHandleProps?: any }) => {
+export const Column = ({ column, fetchBoard, dragHandleProps, userRole }: { column: any; fetchBoard: () => void; dragHandleProps?: any; userRole?: string }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -48,22 +48,24 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
             </span>
           </div>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none cursor-pointer">
-              <MoreHorizontal className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer whitespace-nowrap">
-                <Edit className="w-4 h-4 mr-2" /> Edit Column
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setIsDeleteModalOpen(true)}
-                className="text-destructive focus:text-destructive cursor-pointer whitespace-nowrap"
-              >
-                <Trash2 className="w-4 h-4 mr-2" /> Delete Column
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {userRole !== 'VIEWER' && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-1 outline-none cursor-pointer">
+                <MoreHorizontal className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditModalOpen(true)} className="cursor-pointer whitespace-nowrap">
+                  <Edit className="w-4 h-4 mr-2" /> Edit Column
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="text-destructive focus:text-destructive cursor-pointer whitespace-nowrap"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" /> Delete Column
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
         
         <Droppable droppableId={column.id} type="task">
@@ -79,9 +81,9 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+                      {...(userRole !== 'VIEWER' ? provided.dragHandleProps : {})}
                     >
-                      <TaskCard task={task} fetchBoard={fetchBoard} />
+                      <TaskCard task={task} fetchBoard={fetchBoard} userRole={userRole} />
                     </div>
                   )}
                 </Draggable>
@@ -91,14 +93,16 @@ export const Column = ({ column, fetchBoard, dragHandleProps }: { column: any; f
           )}
         </Droppable>
         
-        <div className="p-3 border-t border-border/50">
-          <button 
-            onClick={() => setIsCreateTaskModalOpen(true)}
-            className="cursor-pointer flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-background w-full px-2 py-1.5 rounded transition-colors text-sm font-medium"
-          >
-            <Plus className="w-4 h-4" /> Add Task
-          </button>
-        </div>
+        {userRole !== 'VIEWER' && (
+          <div className="p-3 border-t border-border/50">
+            <button 
+              onClick={() => setIsCreateTaskModalOpen(true)}
+              className="cursor-pointer flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-background w-full px-2 py-1.5 rounded transition-colors text-sm font-medium"
+            >
+              <Plus className="w-4 h-4" /> Add Task
+            </button>
+          </div>
+        )}
       </div>
 
       <EditColumnModal 

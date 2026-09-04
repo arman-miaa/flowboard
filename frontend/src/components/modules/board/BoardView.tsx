@@ -136,7 +136,8 @@ export const BoardView = ({ id }: { id: string }) => {
                         <Column 
                           column={column} 
                           fetchBoard={fetchBoard} 
-                          dragHandleProps={provided.dragHandleProps}
+                          dragHandleProps={board.userRole !== 'VIEWER' ? provided.dragHandleProps : null}
+                          userRole={board.userRole}
                         />
                       </div>
                     )}
@@ -144,12 +145,14 @@ export const BoardView = ({ id }: { id: string }) => {
                 ))}
                 {provided.placeholder}
 
-                <button 
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className="cursor-pointer w-80 shrink-0 bg-transparent border border-dashed border-border hover:border-primary hover:bg-card text-muted-foreground hover:text-primary rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
-                >
-                  <Plus className="w-5 h-5" /> Add Column
-                </button>
+                {board.userRole !== 'VIEWER' && (
+                  <button 
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="cursor-pointer w-80 shrink-0 bg-transparent border border-dashed border-border hover:border-primary hover:bg-card text-muted-foreground hover:text-primary rounded-lg p-3 flex items-center gap-2 font-medium transition-colors"
+                  >
+                    <Plus className="w-5 h-5" /> Add Column
+                  </button>
+                )}
               </div>
             )}
           </Droppable>

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../../config/prisma';
 import ApiError from '../../errorHelpers/ApiError';
 import config from '../../config';
+import { sendEmail } from '../../utils/email';
 
 const register = async (payload: any) => {
   const existingUser = await prisma.user.findUnique({
@@ -128,9 +129,74 @@ const changePassword = async (userId: string, payload: any) => {
   });
 };
 
+const forgotPassword = async (payload: { email: string }) => {
+  const user = await prisma.user.findUnique({
+    where: { email: payload.email },
+  });
+
+  if (!user) {
+    // Return silently to prevent email enumeration
+    return;
+  }
+
+  // Generate a short-lived reset token
+  const resetToken = jwt.sign(
+    { userId: user.id },
+    config.jwt.secret as string,
+    { expiresIn: '1h' }
+  );
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: #6366f1; margin: 0;">FlowBoard</h2>
+      </div>
+      <h3 style="color: #333;">Password Reset Request</h3>
+      <p style="color: #555; line-height: 1.6;">Hello ${user.name},</p>
+      <p style="color: #555; line-height: 1.6;">We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${resetLink}" style="background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Reset Password</a>
+      </div>
+      <p style="color: #777; font-size: 14px;">This link will expire in 1 hour.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
+      <p style="color: #999; font-size: 12px; text-align: center;">© ${new Date().getFullYear()} FlowBoard. All rights reserved.</p>
+    </div>
+  `;
+
+  await sendEmail(user.email, 'Reset your FlowBoard password', emailHtml);
+};
+
+const resetPassword = async (payload: any) => {
+  try {
+    const decoded = jwt.verify(payload.token, config.jwt.secret as string) as any;
+    
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const salt = await bcrypt.genSalt(Number(config.bcrypt_salt_rounds) || 10);
+    const passwordHash = await bcrypt.hash(payload.newPassword, salt);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid or expired token');
+  }
+};
+
 export const AuthService = {
   register,
   login,
   updateProfile,
   changePassword,
+  forgotPassword,
+  resetPassword,
 };

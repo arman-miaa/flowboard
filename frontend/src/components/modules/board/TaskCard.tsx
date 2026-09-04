@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => void }) => {
+export const TaskCard = ({ task, fetchBoard, userRole }: { task: any; fetchBoard: () => void; userRole?: string }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"view" | "edit">("view");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -40,24 +40,26 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
         <div className="flex justify-between items-start gap-2">
           <h4 className="text-sm font-medium text-card-foreground leading-snug">{task.title}</h4>
           
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground p-0.5 rounded-sm outline-none">
-                <MoreHorizontal className="w-4 h-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => { setModalMode("edit"); setIsEditModalOpen(true); }} className="cursor-pointer">
-                  <Edit className="w-4 h-4 mr-2" /> Edit Task
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  className="text-destructive focus:text-destructive cursor-pointer"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" /> Delete Task
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {userRole !== 'VIEWER' && (
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground p-0.5 rounded-sm outline-none">
+                  <MoreHorizontal className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => { setModalMode("edit"); setIsEditModalOpen(true); }} className="cursor-pointer">
+                    <Edit className="w-4 h-4 mr-2" /> Edit Task
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" /> Delete Task
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
 
         {task.description && (
@@ -73,6 +75,7 @@ export const TaskCard = ({ task, fetchBoard }: { task: any; fetchBoard: () => vo
         onSuccess={fetchBoard}
         task={task}
         initialMode={modalMode}
+        userRole={userRole}
       />
 
       <ConfirmDeleteModal
