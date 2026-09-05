@@ -1,7 +1,7 @@
 # FlowBoard - Mini Kanban Board
 
 <p align="center">
-  <img src="./hero.png" alt="FlowBoard Hero Section" />
+  <img src="./frontend/public/hero.png" alt="FlowBoard Hero Section" />
 </p>
 
 <p align="center">
