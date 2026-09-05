@@ -72,6 +72,9 @@ export const BoardView = ({ id }: { id: string }) => {
         const [reorderedTask] = newTasks.splice(source.index, 1);
         newTasks.splice(destination.index, 0, reorderedTask);
 
+        // Update positions optimistically so the Column sort doesn't revert it
+        newTasks.forEach((t: any, idx: number) => { t.position = idx; });
+
         const newColumns = Array.from(board.columns);
         newColumns[startColIndex] = { ...startCol, tasks: newTasks };
 
@@ -91,6 +94,10 @@ export const BoardView = ({ id }: { id: string }) => {
 
         const finishTasks = Array.from(finishCol.tasks);
         finishTasks.splice(destination.index, 0, movedTask);
+
+        // Update positions optimistically
+        startTasks.forEach((t: any, idx: number) => { t.position = idx; });
+        finishTasks.forEach((t: any, idx: number) => { t.position = idx; });
 
         const newColumns = Array.from(board.columns);
         newColumns[startColIndex] = { ...startCol, tasks: startTasks };

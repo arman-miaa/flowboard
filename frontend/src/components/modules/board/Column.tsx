@@ -75,7 +75,7 @@ export const Column = ({ column, fetchBoard, dragHandleProps, userRole }: { colu
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {column.tasks?.sort((a: any, b: any) => a.position - b.position).map((task: any, index: number) => (
+              {[...(column.tasks || [])].sort((a: any, b: any) => a.position - b.position).map((task: any, index: number) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
                   {(provided) => (
                     <div
