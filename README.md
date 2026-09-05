@@ -1,5 +1,15 @@
 # FlowBoard - Mini Kanban Board
 
+<p align="center">
+  <img src="./hero.png" alt="FlowBoard Hero Section" />
+</p>
+
+<p align="center">
+  <em>A full-stack Kanban board for task management, collaboration, and seamless workflows.</em>
+</p>
+
+---
+
 FlowBoard is a full-stack Kanban board application designed to amplify team velocity and reduce friction. It supports real-time collaboration, board sharing with granular access control, and seamless drag-and-drop task reordering.
 
 ## Features
