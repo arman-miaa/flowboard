@@ -9,8 +9,8 @@ const router = express.Router();
 const moduleRoutes = [
   { path: '/auth', route: AuthRoutes },
   { path: '/boards', route: BoardRoutes },
-  { path: '/', route: ColumnRoutes }, // Mounted on / since routes include /boards/:boardId and /columns/:id
-  { path: '/', route: TaskRoutes },   // Mounted on / since routes include /columns/:columnId and /tasks/:id
+  { path: '/columns', route: ColumnRoutes },
+  { path: '/tasks', route: TaskRoutes },  
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

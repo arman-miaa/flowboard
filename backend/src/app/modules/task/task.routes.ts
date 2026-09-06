@@ -6,9 +6,8 @@ import { TaskValidation } from './task.validation';
 
 const router = express.Router();
 
-router.post('/columns/:columnId/tasks', auth(), validateRequest(TaskValidation.createTaskZodSchema), TaskController.createTask);
-router.patch('/tasks/:id', auth(), validateRequest(TaskValidation.updateTaskZodSchema), TaskController.updateTask);
-router.delete('/tasks/:id', auth(), TaskController.deleteTask);
-router.patch('/tasks/:id/move', auth(), validateRequest(TaskValidation.moveTaskZodSchema), TaskController.moveTask);
+router.patch('/:id', auth(), validateRequest(TaskValidation.updateTaskZodSchema), TaskController.updateTask);
+router.delete('/:id', auth(), TaskController.deleteTask);
+router.patch('/:id/move', auth(), validateRequest(TaskValidation.moveTaskZodSchema), TaskController.moveTask);
 
 export const TaskRoutes = router;
