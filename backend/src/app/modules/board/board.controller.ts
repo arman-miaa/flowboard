@@ -6,38 +6,66 @@ import { BoardService } from './board.service';
 
 const createBoard = catchAsync(async (req: Request, res: Response) => {
   const result = await BoardService.createBoard(req.user!.userId, req.body);
-  sendResponse(res, { statusCode: httpStatus.CREATED, success: true, data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    data: result
+  });
 });
 
 const getAllBoards = catchAsync(async (req: Request, res: Response) => {
   const searchTerm = req.query.search as string | undefined;
   const result = await BoardService.getAllBoards(req.user!.userId, searchTerm);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    data: result
+  });
 });
 
 const getSingleBoard = catchAsync(async (req: Request, res: Response) => {
   const result = await BoardService.getSingleBoard(req.user!.userId, req.params.id);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    data: result
+  });
 });
 
 const updateBoard = catchAsync(async (req: Request, res: Response) => {
   const result = await BoardService.updateBoard(req.user!.userId, req.params.id, req.body);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    data: result
+  });
 });
 
 const deleteBoard = catchAsync(async (req: Request, res: Response) => {
   await BoardService.deleteBoard(req.user!.userId, req.params.id);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Deleted' });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted'
+  });
 });
 
 const shareBoard = catchAsync(async (req: Request, res: Response) => {
   const result = await BoardService.shareBoard(req.user!.userId, req.params.id, req.body);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, data: result });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    data: result
+  });
 });
 
 const removeBoardMember = catchAsync(async (req: Request, res: Response) => {
   await BoardService.removeBoardMember(req.user!.userId, req.params.id, req.params.memberId);
-  sendResponse(res, { statusCode: httpStatus.OK, success: true, message: 'Member removed' });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Member removed'
+  });
 });
 
 export const BoardController = {
